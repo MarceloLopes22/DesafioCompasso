@@ -2,7 +2,8 @@ package com.example.demo.basica;
 
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -44,7 +45,7 @@ public class Cliente implements Serializable {
 			@JoinColumn(name = "id_cliente", nullable = false, updatable = true, insertable = true) }, 
 			inverseJoinColumns = { @JoinColumn(name = "id_cidade", 
 					nullable = false, updatable = true, insertable = true) })
-	private List<Cidade> cidades;
+	private Set<Cidade> cidades = new HashSet<>();
 	
 	public Cliente() {
 	}
@@ -89,11 +90,11 @@ public class Cliente implements Serializable {
 		this.idade = idade;
 	}
 
-	public List<Cidade> getCidades() {
+	public Set<Cidade> getCidades() {
 		return cidades;
 	}
 
-	public void setCidades(List<Cidade> cidades) {
+	public void setCidades(Set<Cidade> cidades) {
 		this.cidades = cidades;
 	}
 }

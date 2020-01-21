@@ -24,14 +24,11 @@ public class Cidade implements Serializable {
 	@Column(name = "id_cidade", nullable = false, unique = true)
 	private Integer id;
 	
-	@Column(name = "nome", nullable = true, length = 3)
+	@Column(name = "nome", nullable = true)
 	private String nome;
 	
-	@Column(name = "estado", nullable = true, length = 15)
+	@Column(name = "estado", nullable = true)
 	private String estado;
-	
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "id_cliente", nullable = false)
 	
 	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "cidades")
 	private Cliente cliente;
