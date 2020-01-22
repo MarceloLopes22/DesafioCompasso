@@ -8,6 +8,8 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -16,6 +18,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+
+import com.example.demo.sexo.Sexo;
 
 @Entity
 @Table(name = "cliente")
@@ -31,8 +35,9 @@ public class Cliente implements Serializable {
 	@Column(name = "nome_completo", length = 100, nullable = true)
 	private String nomeCompleto;
 	
+	@Enumerated(EnumType.ORDINAL)
 	@Column(name = "sexo", length = 100, nullable = true)
-	private String sexo;
+	private Sexo sexo;
 	
 	@Column(name = "data_nascimento", nullable = true)
 	private LocalDate dataNascimento;
@@ -66,11 +71,11 @@ public class Cliente implements Serializable {
 		this.nomeCompleto = nomeCompleto;
 	}
 
-	public String getSexo() {
+	public Sexo getSexo() {
 		return sexo;
 	}
 
-	public void setSexo(String sexo) {
+	public void setSexo(Sexo sexo) {
 		this.sexo = sexo;
 	}
 

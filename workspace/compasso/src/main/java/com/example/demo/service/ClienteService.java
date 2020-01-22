@@ -1,16 +1,17 @@
 package com.example.demo.service;
 
 import com.example.demo.basica.Cliente;
+import com.example.demo.controller.response.Response;
 
 public interface ClienteService {
 
-	Cliente cadastrar(Cliente cliente);
+	Response<Cliente> cadastrar(Cliente cliente);
 
-	Cliente consultarClientePor(String nomeCompleto);
+	Response<Cliente> consultarClientePor(String nomeCompleto);
 
-	Cliente consultarClientePor(Integer id);
+	Response<Cliente> consultarClientePor(Integer id);
 	
 	void remover(Cliente cliente);
 	
-	Cliente alterarNomeCliente(Cliente cliente);
+	Response<Cliente> alterarNomeCliente(Cliente cliente);
 }

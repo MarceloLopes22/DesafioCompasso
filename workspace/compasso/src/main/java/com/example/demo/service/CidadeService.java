@@ -1,12 +1,13 @@
 package com.example.demo.service;
 
 import com.example.demo.basica.Cidade;
+import com.example.demo.controller.response.Response;
 
 public interface CidadeService {
 
-	Cidade cadastrar(Cidade cidade);
+	Response<Cidade> cadastrar(Cidade cidade);
 
-	Cidade consultarCidadePor(String nome);
+	Response<Cidade> consultarCidadePor(String nome);
 
-	Cidade consultarCidade(String estado);
+	Response<Cidade> consultarCidade(String estado);
 }
