@@ -9,5 +9,5 @@ public interface CidadeService {
 
 	Response<Cidade> consultarCidadePor(String nome);
 
-	Response<Cidade> consultarCidade(String estado);
+	Response<Cidade> consultarEstado(String estado);
 }

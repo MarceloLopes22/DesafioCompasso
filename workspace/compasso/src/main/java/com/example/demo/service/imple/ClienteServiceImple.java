@@ -81,9 +81,9 @@ public class ClienteServiceImple implements ClienteService {
 			return response;
 		}
 		
-		Cliente clienteById = clienteRepository.findClienteById(id);
-		response.setDado(clienteById);
-		
+		Cliente cliente = clienteRepository.getOne(id);
+		response.setDado(cliente);
+		response.setStatus(HttpStatus.OK);
 		return response;
 	}
 
@@ -105,6 +105,7 @@ public class ClienteServiceImple implements ClienteService {
 		if (response.getErros().isEmpty()) {
 			Cliente clienteAlterado = clienteRepository.save(cliente);
 			response.setDado(clienteAlterado);
+			response.setStatus(HttpStatus.OK);
 		}
 		return response;
 	}

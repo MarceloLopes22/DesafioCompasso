@@ -9,6 +9,4 @@ import com.example.demo.basica.Cliente;
 public interface ClienteRepository extends JpaRepository<Cliente, Integer>{
 
 	Cliente findClienteByNomeCompleto(String nomeCompleto);
-	
-	Cliente findClienteById(Integer id);
 }

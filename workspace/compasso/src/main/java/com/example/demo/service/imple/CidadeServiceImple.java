@@ -49,7 +49,7 @@ public class CidadeServiceImple implements CidadeService {
 	}
 
 	@Override
-	public Response<Cidade> consultarCidade(String estado) {
+	public Response<Cidade> consultarEstado(String estado) {
 		Response<Cidade> response = new Response<>();
 		Cidade cidade = cidadeRepository.findCidadeByEstado(estado);
 		response.setDado(cidade);
