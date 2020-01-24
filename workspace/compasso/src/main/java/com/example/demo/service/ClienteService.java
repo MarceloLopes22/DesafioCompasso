@@ -13,5 +13,5 @@ public interface ClienteService {
 	
 	void remover(Cliente cliente);
 	
-	Response<Cliente> alterarNomeCliente(Cliente cliente);
+	Response<Cliente> alterarNomeCliente(String nomeAntigo, String nomeNovo);
 }

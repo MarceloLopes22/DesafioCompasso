@@ -1,16 +1,12 @@
 package com.example.demo.basica;
 
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -29,9 +25,6 @@ public class Cidade implements Serializable {
 	
 	@Column(name = "estado", nullable = true, length = 2)
 	private String estado;
-	
-	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "cidades")
-	private Set<Cliente> cliente = new HashSet<>();
 	
 	public Cidade() {
 	}
@@ -59,13 +52,4 @@ public class Cidade implements Serializable {
 	public void setEstado(String estado) {
 		this.estado = estado;
 	}
-
-	public Set<Cliente> getCliente() {
-		return cliente;
-	}
-
-	public void setCliente(Set<Cliente> cliente) {
-		this.cliente = cliente;
-	}
-	
 }

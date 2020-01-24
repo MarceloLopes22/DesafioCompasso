@@ -1,5 +1,7 @@
 package com.example.demo.service.imple;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -43,16 +45,35 @@ public class CidadeServiceImple implements CidadeService {
 	@Override
 	public Response<Cidade> consultarCidadePor(String nome) {
 		Response<Cidade> response = new Response<>();
-		Cidade cidade = cidadeRepository.findCidadeByNome(nome);
-		response.setDado(cidade);
+
+		if (nome.isEmpty()) {
+			response.getErros().put("nomeCidadeErro", "O nome da cidade deve ser informado.");
+			response.setStatus(HttpStatus.BAD_REQUEST);
+		}
+		
+		if (response.getErros().isEmpty() && StringUtils.isEmpty(nome)) {
+			Cidade cidade = cidadeRepository.findCidadeByNome(nome);
+			response.setDado(cidade);
+			response.setStatus(HttpStatus.OK);
+		}
+		
 		return response;
 	}
 
 	@Override
-	public Response<Cidade> consultarEstado(String estado) {
-		Response<Cidade> response = new Response<>();
-		Cidade cidade = cidadeRepository.findCidadeByEstado(estado);
-		response.setDado(cidade);
+	public Response<List<Cidade>> consultarEstado(String estado) {
+		Response<List<Cidade>> response = new Response<>();
+		
+		if (estado.isEmpty()) {
+			response.getErros().put("nomeEstadoErro", "O nome do estado deve ser informado.");
+			response.setStatus(HttpStatus.BAD_REQUEST);
+		}
+		
+		if (response.getErros().isEmpty() && !estado.isEmpty()) {
+			List<Cidade> cidades = cidadeRepository.findByEstado(estado);
+			response.setDado(cidades);
+			response.setStatus(HttpStatus.OK);
+		}
 		return response;
 	}
 

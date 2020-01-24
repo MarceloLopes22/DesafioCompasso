@@ -81,7 +81,7 @@ public class ClienteServiceImple implements ClienteService {
 			return response;
 		}
 		
-		Cliente cliente = clienteRepository.getOne(id);
+		Cliente cliente = clienteRepository.findById(id).get();
 		response.setDado(cliente);
 		response.setStatus(HttpStatus.OK);
 		return response;
@@ -93,17 +93,26 @@ public class ClienteServiceImple implements ClienteService {
 	}
 
 	@Override
-	public Response<Cliente> alterarNomeCliente(Cliente cliente) {
+	public Response<Cliente> alterarNomeCliente(String nomeAntigo, String nomeNovo) {
 		Response<Cliente> response = new Response<>();
 		
-		if (StringUtils.isEmpty(cliente.getNomeCompleto())) {
-			response.getErros().put("nomeErro", "O nome da cidade deve ser preenchida.");
+		if (nomeAntigo.isEmpty() || nomeNovo.isEmpty()) {
+			response.getErros().put("nomeErro", "Os nomes antigo e novo devem ser informados.");
 			response.setStatus(HttpStatus.BAD_REQUEST);
 			return response;
 		}
 		
-		if (response.getErros().isEmpty()) {
-			Cliente clienteAlterado = clienteRepository.save(cliente);
+		response = this.consultarClientePor(nomeAntigo);
+		Cliente clienteConsultado = response.getDado();
+		
+		if (clienteConsultado == null) {
+			response.getErros().put("clienteErro", "Não existe nenhum cliente com esse nome = " + nomeAntigo);
+			response.setStatus(HttpStatus.BAD_REQUEST);
+		}
+		
+		if (clienteConsultado != null && response.getErros().isEmpty()) {
+			clienteConsultado.setNomeCompleto(nomeNovo);
+			Cliente clienteAlterado = clienteRepository.save(clienteConsultado);
 			response.setDado(clienteAlterado);
 			response.setStatus(HttpStatus.OK);
 		}

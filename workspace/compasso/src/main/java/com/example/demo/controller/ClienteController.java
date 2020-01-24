@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -34,15 +35,15 @@ public class ClienteController {
 		return new ResponseEntity<Response<Cliente>>(response, status);
 	}
 
-	@RequestMapping(value = "consultarClientePor/{nome}", method = RequestMethod.GET)
-	public ResponseEntity<Response<Cliente>> consultarClientePor(@PathVariable("nome") String nome) {
-		Response<Cliente> response = this.service.consultarClientePor(nome);
+	@GetMapping(value= "consultarClientePor/{nomeCompleto}")
+	public ResponseEntity<Response<Cliente>> consultarClientePor(@PathVariable(value = "nomeCompleto") String nomeCompleto) {
+		Response<Cliente> response = this.service.consultarClientePor(nomeCompleto);
 		HttpStatus status = response.getStatus();
 		return new ResponseEntity<Response<Cliente>>(response, status);
 	}
 	
-	@RequestMapping(value = "consultarClientePor/{id}", method = RequestMethod.GET)
-	public ResponseEntity<Response<Cliente>> consultarClientePor(@PathVariable("id") int id) {
+	@RequestMapping(value = "pesquisarClientePor/{id}", method = RequestMethod.GET)
+	public ResponseEntity<Response<Cliente>> pesquisarClientePor(@PathVariable("id") Integer id) {
 		Response<Cliente> response = this.service.consultarClientePor(id);
 		HttpStatus status = response.getStatus();
 		return new ResponseEntity<Response<Cliente>>(response, status);
@@ -50,28 +51,19 @@ public class ClienteController {
 	
 	@DeleteMapping(value = "remover/")
 	public ResponseEntity<Response<Cliente>> remover(@RequestBody Cliente cliente) {
-		Boolean objetoRemovido = Boolean.FALSE;
-		
 		this.service.remover(cliente);
-		Response<Cliente> response = this.service.consultarClientePor(cliente.getId());
-		if (response.getDado() == null) {
-			objetoRemovido = Boolean.TRUE;
-		}
-		if (!objetoRemovido) {
-			response.getErros().put("clienteNaoExisteErro", "O Cliente informado não existe.");
-			response.setStatus(HttpStatus.BAD_REQUEST);
-		}
-		HttpStatus status = response.getStatus();
-		return new ResponseEntity<Response<Cliente>>(response, status);
+		return new ResponseEntity<Response<Cliente>>(HttpStatus.OK);
 	}
 	
 
-	// TODO - Parei aqui
-	@PutMapping(value = "alterarNomeCliente/{nomeCliente}")
-	public ResponseEntity<Response<Cliente>> alterarNomeCliente(@PathVariable("nomeCliente") String nomeCliente) {
-		Boolean objetoRemovido = Boolean.FALSE;
-		Response<Cliente> consultarClientePor = this.service.consultarClientePor(nomeCliente);
-		//return new ResponseEntity<Response<Cliente>>(response, status);
-		return null;
+	@PutMapping(value = "alterarNomeCliente/{nomeAntigo}/{nomeNovo}")
+	public ResponseEntity<Response<Cliente>> alterarNomeCliente(
+				@PathVariable(value = "nomeAntigo") String nomeAntigo,
+				@PathVariable(value = "nomeNovo") String nomeNovo) {
+		Response<Cliente> response = new Response<Cliente>();
+		
+		response = this.service.alterarNomeCliente(nomeAntigo, nomeNovo);
+		HttpStatus status = response.getStatus();
+		return new ResponseEntity<Response<Cliente>>(response, status);
 	}
 }
