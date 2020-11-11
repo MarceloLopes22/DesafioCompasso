@@ -1,7 +1,7 @@
 package com.example.demo.controller.response;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.http.HttpStatus;
 
@@ -15,7 +15,7 @@ public class Response<T> {
 	@JsonProperty("status")
 	private HttpStatus status;
 	
-	private Map<String,String> erros;
+	private List<String> erros;
 
 	public T getDado() {
 		return dado;
@@ -32,14 +32,14 @@ public class Response<T> {
 		this.status = status;
 	}
 
-	public Map<String, String> getErros() {
+	public List<String> getErros() {
 		if (erros == null) {
-			this.erros = new HashMap<String,String>();
+			this.erros = new ArrayList<String>();
 		}
 		return erros;
 	}
 
-	public void setErros(Map<String, String> erros) {
+	public void setErros(List<String> erros) {
 		this.erros = erros;
 	}
 }

@@ -12,6 +12,5 @@ public interface CidadeRepository extends JpaRepository<Cidade, Integer> {
 	
 	Cidade findCidadeByNome(String nome);
 	
-	//@Query(value = "select c from Cidade c where c.estado =:estado group by c.id,c.estado") @Param(value = "estado")
 	List<Cidade> findByEstado(String estado);
 }

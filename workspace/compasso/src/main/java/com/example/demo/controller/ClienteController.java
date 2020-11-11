@@ -1,10 +1,12 @@
 package com.example.demo.controller;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,7 +31,8 @@ public class ClienteController {
 	private ClienteService service;
 	
 	@PostMapping(value = "cadastrar")
-	public ResponseEntity<Response<Cliente>> cadastrar(HttpServletRequest request, @RequestBody Cliente cliente) {
+	public ResponseEntity<Response<Cliente>> cadastrar(HttpServletRequest request,@Valid @RequestBody Cliente cliente,
+			BindingResult result) {
 		Response<Cliente> response = this.service.cadastrar(cliente);
 		HttpStatus status = response.getStatus();
 		return new ResponseEntity<Response<Cliente>>(response, status);
