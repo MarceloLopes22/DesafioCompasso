@@ -1,9 +1,14 @@
 package com.example.demo.service.imple;
 
+import java.util.Objects;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+import org.springframework.validation.BindingResult;
 
 import com.example.demo.basica.Cliente;
 import com.example.demo.controller.response.Response;
@@ -17,42 +22,21 @@ public class ClienteServiceImple implements ClienteService {
 	private ClienteRepository clienteRepository;
 	
 	@Override
-	public Response<Cliente> cadastrar(Cliente cliente) {
+	public ResponseEntity<Response<Cliente>> cadastrar(Cliente cliente, BindingResult result) {
 		Response<Cliente> response = new Response<>();
-		validar(cliente, response);
+
+		if (result.hasErrors()) {
+			result.getAllErrors().forEach(erro -> response.getErros().add(erro.getDefaultMessage()));
+			response.setStatus(HttpStatus.BAD_REQUEST);
+			return ResponseEntity.badRequest().body(response);
+		}
+		
 		if (response.getErros().isEmpty()) {
 			Cliente clienteSalvo = clienteRepository.save(cliente);
 			response.setDado(clienteSalvo);
 			response.setStatus(HttpStatus.OK);
 		}
-		return response;
-	}
-
-	private void validar(Cliente cliente, Response<Cliente> response) {
-		if (StringUtils.isEmpty(cliente.getNomeCompleto())) {
-			response.getErros().put("nomeErro", "O nome do cliente deve ser preenchido.");
-			response.setStatus(HttpStatus.BAD_REQUEST);
-		}
-		
-		if (cliente.getSexo() == null) {
-			response.getErros().put("sexoErro", "O sexo deve ser preenchido.");
-			response.setStatus(HttpStatus.BAD_REQUEST);
-		}
-		
-		if (cliente.getIdade() == 0) {
-			response.getErros().put("idadeErro", "A idade deve ser preenchida.");
-			response.setStatus(HttpStatus.BAD_REQUEST);
-		}
-		
-		if (cliente.getDataNascimento() == null) {
-			response.getErros().put("dataNascimentoErro", "A data de nascimento deve ser preenchida.");
-			response.setStatus(HttpStatus.BAD_REQUEST);
-		}
-
-		if (cliente.getCidades().isEmpty()) {
-			response.getErros().put("cidadesErro", "A cidade devem ser preenchida.");
-			response.setStatus(HttpStatus.BAD_REQUEST);
-		}
+		return ResponseEntity.ok(response);
 	}
 
 	@Override
@@ -60,7 +44,7 @@ public class ClienteServiceImple implements ClienteService {
 		Response<Cliente> response = new Response<>();
 		
 		if (StringUtils.isEmpty(nomeCompleto)) {
-			response.getErros().put("nomeErro", "O nome da cidade deve ser preenchida.");
+			response.getErros().add("O nome da cidade deve ser preenchida.");
 			response.setStatus(HttpStatus.BAD_REQUEST);
 			return response;
 		}
@@ -76,14 +60,19 @@ public class ClienteServiceImple implements ClienteService {
 		Response<Cliente> response = new Response<>();
 		
 		if (id == null) {
-			response.getErros().put("idErro", "O id deve ser preenchido.");
+			response.getErros().add("O id deve ser preenchido.");
 			response.setStatus(HttpStatus.BAD_REQUEST);
 			return response;
 		}
 		
-		Cliente cliente = clienteRepository.findById(id).get();
-		response.setDado(cliente);
-		response.setStatus(HttpStatus.OK);
+		Optional<Cliente> optional = clienteRepository.findById(id);
+		if (optional.isPresent()) {
+			response.setDado(optional.get());
+			response.setStatus(HttpStatus.OK);
+		} else {
+			response.setDado(new Cliente());
+			response.setStatus(HttpStatus.NO_CONTENT);
+		}
 		return response;
 	}
 
@@ -93,21 +82,22 @@ public class ClienteServiceImple implements ClienteService {
 	}
 
 	@Override
-	public Response<Cliente> alterarNomeCliente(String nomeAntigo, String nomeNovo) {
+	public ResponseEntity<Response<Cliente>> alterarNomeCliente(String nomeAntigo, String nomeNovo) {
 		Response<Cliente> response = new Response<>();
 		
-		if (nomeAntigo.isEmpty() || nomeNovo.isEmpty()) {
-			response.getErros().put("nomeErro", "Os nomes antigo e novo devem ser informados.");
+		if (StringUtils.isEmpty(nomeAntigo) || StringUtils.isEmpty(nomeNovo)) {
+			response.getErros().add("Os nomes antigo e novo devem ser informados.");
 			response.setStatus(HttpStatus.BAD_REQUEST);
-			return response;
+			return ResponseEntity.badRequest().body(response);
 		}
 		
 		response = this.consultarClientePor(nomeAntigo);
 		Cliente clienteConsultado = response.getDado();
 		
-		if (clienteConsultado == null) {
-			response.getErros().put("clienteErro", "Não existe nenhum cliente com esse nome = " + nomeAntigo);
+		if (Objects.isNull(clienteConsultado)) {
+			response.getErros().add("Não existe nenhum cliente com esse nome = " + nomeAntigo);
 			response.setStatus(HttpStatus.BAD_REQUEST);
+			return ResponseEntity.badRequest().body(response);
 		}
 		
 		if (clienteConsultado != null && response.getErros().isEmpty()) {
@@ -116,7 +106,7 @@ public class ClienteServiceImple implements ClienteService {
 			response.setDado(clienteAlterado);
 			response.setStatus(HttpStatus.OK);
 		}
-		return response;
+		return ResponseEntity.ok(response);
 	}
 
 }

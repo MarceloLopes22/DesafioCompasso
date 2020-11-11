@@ -20,6 +20,8 @@ import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 import com.example.demo.sexo.Sexo;
 
@@ -34,20 +36,25 @@ public class Cliente implements Serializable {
 	@Column(name = "id_cliente", nullable = false, precision = 1, unique = true)
 	private Integer id;
 	
-	@Column(name = "nome_completo", length = 100, nullable = true)
+	@Column(name = "nome_completo", length = 100)
+	@NotEmpty(message = "O nome do cliente deve ser preenchido.")
 	private String nomeCompleto;
 	
 	@Enumerated(EnumType.ORDINAL)
-	@Column(name = "sexo", length = 100, nullable = true)
+	@Column(name = "sexo", length = 100)
+	@NotNull(message = "O sexo deve ser preenchido.")
 	private Sexo sexo;
 	
-	@Column(name = "data_nascimento", nullable = true)
+	@Column(name = "data_nascimento")
+	@NotNull(message = "A data de nascimento deve ser preenchida.")
 	@Temporal(TemporalType.DATE)
 	private Date dataNascimento;
 	
-	@Column(name = "idade", nullable = true)
+	@Column(name = "idade")
+	@NotNull(message = "A idade deve ser preenchida.")
 	private int idade ;
 	
+	@NotEmpty(message = "A cidade devem ser preenchida.")
 	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinTable(name = "cliente_cidade", joinColumns = { 
 			@JoinColumn(name = "id_cliente", nullable = false, updatable = true, insertable = true) }, 

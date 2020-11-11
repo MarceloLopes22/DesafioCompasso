@@ -1,11 +1,14 @@
 package com.example.demo.service;
 
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+
 import com.example.demo.basica.Cliente;
 import com.example.demo.controller.response.Response;
 
 public interface ClienteService {
 
-	Response<Cliente> cadastrar(Cliente cliente);
+	ResponseEntity<Response<Cliente>> cadastrar(Cliente cliente, BindingResult result);
 
 	Response<Cliente> consultarClientePor(String nomeCompleto);
 
@@ -13,5 +16,5 @@ public interface ClienteService {
 	
 	void remover(Cliente cliente);
 	
-	Response<Cliente> alterarNomeCliente(String nomeAntigo, String nomeNovo);
+	ResponseEntity<Response<Cliente>> alterarNomeCliente(String nomeAntigo, String nomeNovo);
 }
